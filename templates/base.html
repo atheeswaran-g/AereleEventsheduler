@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athees Event Scheduler</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/t1.png') }}" type="image/png">
+
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-brand">
+                <i class="fa-solid fa-calendar-alt"></i> Scheduler
+            </a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-link {{ 'active' if request.path == '/' else '' }}">
+                <i class="fa-solid fa-gauge"></i> Dashboard
+            </a>
+            <a href="/events" class="nav-link {{ 'active' if request.path == '/events' else '' }}">
+                <i class="fa-solid fa-calendar-check"></i> Events
+            </a>
+            <a href="/resources" class="nav-link {{ 'active' if request.path == '/resources' else '' }}">
+                <i class="fa-solid fa-cubes"></i> Resources
+            </a>
+            <a href="/allocations" class="nav-link {{ 'active' if request.path == '/allocations' else '' }}">
+                <i class="fa-solid fa-project-diagram"></i> Allocations
+            </a>
+            <a href="/report" class="nav-link {{ 'active' if request.path == '/report' else '' }}">
+                <i class="fa-solid fa-clipboard-list"></i> Report
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            &copy; 2025 Event Scheduler
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fa-solid {{ 'fa-check-circle' if category == 'success' else 'fa-exclamation-circle' }}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+</html>

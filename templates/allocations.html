@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid-3-1">
+    
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-link"></i> Allocate Resources</h2>
+            </div>
+            <div class="card-body">
+                <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem;">Select an event and allocate multiple resources by type.</p>
+                
+                <form action="/allocations" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Select Event</label>
+                        <select name="event_id" required class="form-select">
+                            <option value="">-- Choose Event --</option>
+                            {% for event in events %}
+                            <option value="{{ event.event_id }}">{{ event.title }} ({{ event.start_time.strftime('%Y-%m-%d %H:%M') }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Select Resources</label>
+                        <div class="resource-list" style="max-height: 250px;">
+                            {% set resource_types = resources | map(attribute='resource_type') | unique | list %}
+                            {% for resource_type in resource_types %}
+                                <div style="margin-bottom: 0.75rem;">
+                                    <h4 style="font-size: 0.875rem; color: #0f766e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                                        <i class="fa-solid fa-tag"></i> {{ resource_type }}
+                                    </h4>
+                                    {% for resource in resources %}
+                                        {% if resource.resource_type == resource_type %}
+                                        <div class="resource-item" style="padding-left: 1rem;">
+                                            <input type="checkbox" name="resource_ids" value="{{ resource.resource_id }}" id="res_{{ resource.resource_id }}">
+                                            <label for="res_{{ resource.resource_id }}" style="cursor: pointer; font-size: 0.875rem;">{{ resource.resource_name }}</label>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            
+                            {% if not resources %}
+                            <p style="font-size: 0.875rem; color: #6b7280;">No resources available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fa-solid fa-check"></i> Allocate Selected Resources
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Allocations List -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-project-diagram"></i> Current Allocations</h2>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Resource</th>
+                                <th>Type</th>
+                                <th>Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for allocation in allocations %}
+                            <tr>
+                                <td style="font-weight: 500; color: #0d9488;">{{ allocation.event.title }}</td>
+                                <td>{{ allocation.resource.resource_name }}</td>
+                                <td>
+                                    <span class="badge" style="background: #ccfbf1; color: #115e59;">{{ allocation.resource.resource_type }}</span>
+                                </td>
+                                <td style="color: #6b7280; font-size: 0.875rem;">
+                                    {{ allocation.event.start_time.strftime('%Y-%m-%d %H:%M') }}
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('delete_allocation', allocation_id=allocation.allocation_id) }}" method="POST" onsubmit="return confirm('Remove this allocation?');">
+                                        <button type="submit" class="btn-delete" title="Remove Allocation">
+                                            <i class="fa-solid fa-unlink"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #6b7280; padding: 2rem;">No allocations found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

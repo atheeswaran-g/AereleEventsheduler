@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;" class="card">
+    <div class="card-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="color: #0d9488;"><i class="fa-solid fa-pen-to-square"></i> Edit Resource</h2>
+            <a href="{{ url_for('resources') }}" class="btn-cancel"><i class="fa-solid fa-times"></i> Cancel</a>
+        </div>
+        
+        <form action="{{ url_for('edit_resource', resource_id=resource.resource_id) }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Resource Name</label>
+                <input type="text" name="resource_name" value="{{ resource.resource_name }}" required class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Type</label>
+                <select name="resource_type" class="form-select">
+                    <option value="Room" {% if resource.resource_type == 'Room' %}selected{% endif %}>Room</option>
+                    <option value="Instructor" {% if resource.resource_type == 'Instructor' %}selected{% endif %}>Instructor</option>
+                    <option value="Equipment" {% if resource.resource_type == 'Equipment' %}selected{% endif %}>Equipment</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Resource</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

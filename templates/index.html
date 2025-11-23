@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-welcome">
+    <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 1rem;">Welcome to Event Scheduler</h1>
+    <p style="font-size: 1.25rem; color: #4b5563; margin-bottom: 2rem;">Manage your events and resources efficiently without conflicts.</p>
+    
+    <div class="grid-2" style="max-width: 900px; margin: 0 auto;">
+        <div class="dashboard-card">
+            <div class="dashboard-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+            <h3>Manage Events</h3>
+            <p style="color: #4b5563; margin-bottom: 1.5rem;">Schedule new events and view upcoming schedule.</p>
+            <a href="/events" class="btn btn-primary">Go to Events</a>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="dashboard-icon"><i class="fa-solid fa-cubes"></i></div>
+            <h3>Manage Resources</h3>
+            <p style="color: #4b5563; margin-bottom: 1.5rem;">Add rooms, instructors, and equipment.</p>
+            <a href="/resources" class="btn btn-primary">Go to Resources</a>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto;">
+        <div class="card-body">
+            <h2 style="border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1.5rem;">System Overview</h2>
+            <div class="grid-2" style="gap: 1rem; margin-bottom: 2rem;">
+                <div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+                    <span style="display: block; font-size: 2rem; font-weight: bold; color: #0d9488;">{{ total_events }}</span>
+                    <span style="color: #6b7280;">Total Events</span>
+                </div>
+                <div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+                    <span style="display: block; font-size: 2rem; font-weight: bold; color: #0d9488;">{{ total_resources }}</span>
+                    <span style="color: #6b7280;">Total Resources</span>
+                </div>
+            </div>
+            
+            <h3 style="font-size: 1.125rem; margin-bottom: 1rem;">Upcoming Events</h3>
+            <ul style="list-style: none;">
+                {% for event in upcoming_events %}
+                <li style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb;">
+                    <span>{{ event.title }}</span>
+                    <span style="color: #6b7280; font-size: 0.875rem;">{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</span>
+                </li>
+                {% else %}
+                <li style="color: #9ca3af; font-style: italic;">No upcoming events.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

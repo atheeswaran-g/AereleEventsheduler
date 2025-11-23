@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid-3-1">
+    
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-plus-circle"></i> Add Resource</h2>
+            </div>
+            <div class="card-body">
+                <form action="/resource/add" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Resource Name</label>
+                        <input type="text" name="resource_name" required class="form-input" placeholder="e.g., Conference Room A">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select name="resource_type" class="form-select">
+                            <option value="Room">Room</option>
+                            <option value="Instructor">Instructor</option>
+                            <option value="Equipment">Equipment</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Add Resource</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resource List -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-cubes"></i> Available Resources</h2>
+            </div>
+            <div class="card-body" style="padding: 0;">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resource in resources %}
+                            <tr>
+                                <td style="font-weight: 500;">{{ resource.resource_name }}</td>
+                                <td>
+                                    <span class="badge badge-room">{{ resource.resource_type }}</span>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a href="{{ url_for('edit_resource', resource_id=resource.resource_id) }}" class="btn-edit" title="Edit Resource">
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                        <form action="{{ url_for('delete_resource', resource_id=resource.resource_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this resource?');" style="display: inline;">
+                                            <button type="submit" class="btn-delete" title="Delete Resource">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: #6b7280; padding: 2rem;">No resources found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

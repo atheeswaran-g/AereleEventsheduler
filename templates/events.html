@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="grid-3-1">
+    
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-calendar-plus"></i> Schedule Event</h2>
+            </div>
+            <div class="card-body">
+                <form action="/event/add" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Event Title</label>
+                        <input type="text" name="title" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Start</label>
+                        <input type="datetime-local" name="start_time" step="60" required class="form-input" style="font-size: 1.1rem; padding: 0.75rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">End</label>
+                        <input type="datetime-local" name="end_time" step="60" required class="form-input" style="font-size: 1.1rem; padding: 0.75rem;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" rows="2" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Allocate Resources (Optional)</label>
+                        <div class="resource-list">
+                            {% for resource in resources %}
+                            <div class="resource-item">
+                                <input type="checkbox" name="resources" value="{{ resource.resource_id }}">
+                                <span style="font-size: 0.875rem;">{{ resource.resource_name }} ({{ resource.resource_type }})</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Check boxes to select resources.</p>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events List -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-calendar-check"></i> Scheduled Events</h2>
+            </div>
+            <div class="card-body">
+                {% for event in events %}
+                <div class="event-card">
+                    <div class="event-details">
+                        <h3>{{ event.title }}</h3>
+                        <p style="font-size: 0.875rem; color: #4b5563; margin-bottom: 0.5rem;">{{ event.description }}</p>
+                        
+                        <div class="event-meta {% if event.start_time < now %}past-event-text{% endif %}">
+                            <i class="fa-regular fa-clock"></i> 
+                            {{ event.start_time.strftime('%Y-%m-%d %H:%M') }} - {{ event.end_time.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+
+                        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb;">
+                            <p style="font-size: 0.75rem; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 0.25rem;">Allocated Resources:</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                {% for allocation in event.allocations %}
+                                <span style="background: white; border: 1px solid #d1d5db; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fa-solid fa-tag" style="color: #2dd4bf;"></i> {{ allocation.resource.resource_name }}
+                                </span>
+                                {% else %}
+                                <span style="font-size: 0.75rem; color: #9ca3af; font-style: italic;">No resources allocated</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="actions-cell">
+                        <a href="{{ url_for('edit_event', event_id=event.event_id) }}" class="btn-edit" title="Edit Event">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
+                        <form action="{{ url_for('delete_event', event_id=event.event_id) }}" method="POST" onsubmit="return confirm('Delete this event?');" style="display: inline;">
+                            <button type="submit" class="btn-delete" title="Delete Event">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <p style="text-center: center; color: #6b7280; padding: 2rem;">No events scheduled yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fa-solid fa-clipboard-list"></i> Resource Utilization Report</h2>
+        </div>
+        
+        <div class="card-body">
+            <form method="POST" style="background: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" name="start_date" required value="{{ start_date.strftime('%Y-%m-%d') if start_date else '' }}" class="form-input">
+                </div>
+                <div style="flex: 1;">
+                    <label class="form-label">End Date</label>
+                    <input type="date" name="end_date" required value="{{ end_date.strftime('%Y-%m-%d') if end_date else '' }}" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-primary" style="height: 42px;">
+                    Generate Report
+                </button>
+                
+                {% if start_date and end_date %}
+                <a href="{{ url_for('clear_report') }}" class="btn" style="background: #6b7280; color: white; height: 42px; display: flex; align-items: center;">
+                    Clear
+                </a>
+                {% endif %}
+            </form>
+
+            {% if report_data %}
+                <div class="table-container" style="border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>Type</th>
+                                <th>Total Hours Utilized</th>
+                                <th>Upcoming Bookings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in report_data %}
+                            <tr>
+                                <td style="font-weight: 500;">{{ row.resource }}</td>
+                                <td style="color: #6b7280;">{{ row.type }}</td>
+                                <td>
+                                    <span class="badge" style="{{ 'background: #dcfce7; color: #166534;' if row.hours > 0 else 'background: #f3f4f6; color: #6b7280;' }}">
+                                        {{ row.hours }} hrs
+                                    </span>
+                                </td>
+                                <td style="color: #6b7280;">{{ row.upcoming }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% elif start_date and end_date %}
+                <div style="text-align: center; padding: 3rem; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 0.5rem;">
+                    <p style="color: #6b7280;">No data found for the selected date range.</p>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 0.5rem;">
+                    <p style="color: #6b7280;">Select a date range to view resource utilization.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

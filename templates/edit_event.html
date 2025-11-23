@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;" class="card">
+    <div class="card-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="color: #0d9488;"><i class="fa-solid fa-pen-to-square"></i> Edit Event</h2>
+            <a href="{{ url_for('events') }}" class="btn-cancel"><i class="fa-solid fa-times"></i> Cancel</a>
+        </div>
+        
+        <form action="{{ url_for('edit_event', event_id=event.event_id) }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Event Title</label>
+                <input type="text" name="title" value="{{ event.title }}" required class="form-input">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Start Time</label>
+                    <input type="datetime-local" name="start_time" value="{{ event.start_time.strftime('%Y-%m-%dT%H:%M') }}" step="60" required class="form-input" style="font-size: 1.1rem; padding: 0.75rem;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Time</label>
+                    <input type="datetime-local" name="end_time" value="{{ event.end_time.strftime('%Y-%m-%dT%H:%M') }}" step="60" required class="form-input" style="font-size: 1.1rem; padding: 0.75rem;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea name="description" rows="3" class="form-textarea">{{ event.description }}</textarea>
+            </div>
+
+            <div style="background: #fefce8; border-left: 4px solid #facc15; padding: 1rem; margin-bottom: 1.5rem; display: flex; gap: 0.75rem;">
+                <i class="fa-solid fa-triangle-exclamation" style="color: #facc15; margin-top: 2px;"></i>
+                <p style="color: #a16207; font-size: 0.875rem;">
+                    Changing the time will re-validate conflicts for all currently allocated resources.
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Update Event</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
