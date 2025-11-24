@@ -17,7 +17,7 @@ db = SQLAlchemy(app)
 class Resource(db.Model):
     resource_id = db.Column(db.Integer, primary_key=True)
     resource_name = db.Column(db.String(100), nullable=False)
-    resource_type = db.Column(db.String(50), nullable=False)  # e.g., Room, Instructor
+    resource_type = db.Column(db.String(50), nullable=False)  
     allocations = db.relationship('EventResourceAllocation', backref='resource', lazy=True)
 
 class Event(db.Model):
