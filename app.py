@@ -130,7 +130,7 @@ def allocations():
     resources = Resource.query.all()
     return render_template('allocations.html', allocations=allocations_list, events=events, resources=resources)
 
-# rsource add function-------------------------------------------------------->
+# resource add function-------------------------------------------------------->
 
 @app.route('/resource/add', methods=['POST'])
 def add_resource():
