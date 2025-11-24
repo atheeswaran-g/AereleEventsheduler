@@ -65,10 +65,13 @@ def index():
     total_resources = Resource.query.count()
     return render_template('index.html', upcoming_events=upcoming_events, total_events=total_events, total_resources=total_resources)
 
+#Resource section;
 @app.route('/resources')
 def resources():
     all_resources = Resource.query.all()
     return render_template('resources.html', resources=all_resources)
+
+#Event section;
 
 @app.route('/events')
 def events():
